@@ -1,0 +1,40 @@
+---
+--- Created by chens.
+--- DateTime: 2019/7/17 19:50
+---
+
+local c = "ctor"
+
+local function CallCtor( instObj, curClassType, ... )
+    if curClassType.Base ~= nil then
+        CallCtor(instObj, curClassType.Base, ...)
+    end
+
+    local ctro = rawget(curClassType,c)
+    if ctro ~= nil then
+        ctro(instObj, ...)
+    end
+end
+
+local function EmptyFunc() end
+function LuaClass(baseClass)
+    -- 一个类模板
+    local class_type = { }
+    class_type.Base = baseClass
+    class_type.ctor = EmptyFunc
+    class_type.MetaTable = {__index = class_type}
+    class_type.New = function(...)
+        -- 对一个新建的表，递归执行构造函数
+        local instObj = { }
+        instObj.Base = baseClass
+        instObj.ctor = EmptyFunc
+        -- 调用递归
+        CallCtor(instObj, class_type, ...)
+        -- 设置元表
+        setmetatable(instObj, class_type.MetaTable)
+        return instObj
+    end
+
+    setmetatable(class_type, { __index = baseClass })
+    return class_type
+end
