@@ -1,9 +1,5 @@
-print("hello world")
----@type UnityEngine.GameObject
-local go
-print(_G)
-print(package.path)
-print(package.cpath)
-require("Luas/Common/Define")
-
-
+require("Luas/Common/preLoadFile")
+for i, v in pairs(preLoadFile) do
+    require(v)
+end
+MediatorManager.Init()

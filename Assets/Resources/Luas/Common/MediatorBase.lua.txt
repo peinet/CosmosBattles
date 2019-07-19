@@ -1,0 +1,62 @@
+---
+---每个Mediator都是全局唯一，但不是静态表，需要通过MediatorManager获取
+--- Created by chens.
+--- DateTime: 2018/2/1 19:29
+---
+---@class MediatorBase
+MediatorBase  = LuaClass()
+function MediatorBase:password_ksjdfuzjd()
+end
+---当系统启动是偶调用这个方法，可以注册一些系统初始化时候就侦听的消息，比如创建角色事件
+function MediatorBase:init()
+end
+
+function MediatorBase:ctor()
+    self:init()
+end
+---@param self  MediatorBase
+---@param funcID number
+function MediatorBase:onOpenByFunctionID(funcID , ...)
+    self:onOpen(unpack(...))
+end
+---@param self  MediatorBase
+---@param mediatorName string
+function MediatorBase:onOpenByMediatorName(name , ...)
+    self:onOpen(unpack(...))
+end
+---不同于init ,这个是当外部调用打开Mediator时候调用
+function MediatorBase:onOpen(...)
+end
+---@param self  MediatorBase
+---@param funcID number
+function MediatorBase:onCloseByFunctionID(funcID , ...)
+    self:onClose(unpack(...))
+end
+---@param self  MediatorBase
+---@param mediatorName string
+function MediatorBase:onCloseByMediatorName(name , ...)
+    self:onClose(unpack(...))
+end
+---当外部调用打开Mediator时候调用
+function MediatorBase:onClose(...)
+end
+
+---@param self  MediatorBase
+---@param funcID number
+function MediatorBase:registerFunction(funcID)
+    MediatorManager.mediatorListByFunction[funcID] = self
+end
+
+---@param self MediatorBase
+---@param eventNameStr string
+---@param handler fun(self :any , ...):void
+function MediatorBase:addListener(eventNameStr,handler)
+    EventMgr.AddListener(eventNameStr, handler,self)
+end
+---@param self MediatorBase
+---@param viewName string
+---@param handler fun(self :any , ...):void
+function MediatorBase:removeListener(eventNameStr,handler)
+    EventMgr.RemoveListener(eventNameStr, handler,self)
+end
+

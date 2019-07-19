@@ -1,0 +1,12 @@
+---
+--- Created by chens.
+--- DateTime: 2019/7/20 16:05
+---
+---@class preLoadFile
+preLoadFile =
+{
+    "Luas/Common/Define",
+
+    "Luas/Common/MediatorBase",
+    "Luas/Common/MediatorManager",
+}
